@@ -1,0 +1,17 @@
+.app-header {
+    display: flex;
+    justify-content: space-between
+}
+
+nav {
+    display: flex;
+    flex-direction: row;
+    a {
+        margin-left: 0.5rem;
+        padding-right: 0.5rem;
+        border-right: 1px solid black;
+        &:last-child {
+            border-right: none;
+        }
+    }
+}
