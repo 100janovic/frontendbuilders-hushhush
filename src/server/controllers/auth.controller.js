@@ -1,6 +1,6 @@
 import db from "../db/db.js";
 import bcrypt from "bcryptjs";
-import { generateToken, getTokenFromHeader, isTokenValid } from "../utils/token.js";
+import { generateToken, getTokenFromHeader, getVerifiedUsesFromToken } from "../utils/token.js";
 
 
 export const register = async (req, res) => {
@@ -28,7 +28,7 @@ export const register = async (req, res) => {
     res.status(200).json({
         message: "Register successs!",
         token
-    })
+    });
 };
 
 
@@ -70,13 +70,13 @@ export const status = (req, res) => {
         return;
     }
 
-    const isValid = isTokenValid(token);
-    if (!isValid) {
+    const userFromToken = getVerifiedUsesFromToken(token);
+    if (!userFromToken) {
         res.status(401).json({ message: "Token not valid" });
         return;
     }
 
-    const user = db.data.users.find((u) => u.email === isValid.email);
+    const user = db.data.users.find((u) => u.email === userFromToken.email);
     if (!user) {
         res.status(401).json({ message: "User not found" });
         return;

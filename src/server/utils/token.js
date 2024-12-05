@@ -11,17 +11,17 @@ export const generateToken = (payload) => {
     )
 };
 
-export const isTokenValid = (token) => {
-    let isValid = false;
+export const getVerifiedUsesFromToken = (token) => {
+    let result = false;
 
     jwt.verify(
         token,
         ServerConfig.token.secret,
         (err, payload) => {
-            isValid = err ? false : payload;
+            result = err ? false : payload;
         })
 
-    return isValid;
+    return result;
 }
 
 export const getTokenFromHeader = (headers) => {

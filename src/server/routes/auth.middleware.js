@@ -1,4 +1,4 @@
-import { getTokenFromHeader, isTokenValid } from "../utils/token.js";
+import { getTokenFromHeader, getVerifiedUsesFromToken } from "../utils/token.js";
 
 const authMiddleware = (req, res, next) => {
     const token = getTokenFromHeader(req.headers);
@@ -7,8 +7,8 @@ const authMiddleware = (req, res, next) => {
         return;
     }
 
-    const isValid = isTokenValid(token);
-    if (isValid) {
+    const user = getVerifiedUsesFromToken(token);
+    if (user) {
         return next();
     }
 
