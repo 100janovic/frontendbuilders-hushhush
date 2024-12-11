@@ -1,4 +1,5 @@
 export const ServerConfig = {
+    port: 3001,
     cors: {
         origin: [
             "http://localhost:4200"

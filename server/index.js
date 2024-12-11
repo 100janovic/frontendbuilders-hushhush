@@ -7,7 +7,7 @@ import { ServerConfig } from "./config/server.config.js";
 import { logger } from "./utils/logger.js";
 
 // Config
-const port = process.env.PORT || 3001;
+const port = process.env.PORT || ServerConfig.port;
 const host = process.env.HOST ?? 'localhost';
 
 // Create
