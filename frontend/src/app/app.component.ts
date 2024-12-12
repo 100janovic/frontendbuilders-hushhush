@@ -6,6 +6,6 @@ import { HeaderComponent } from './header/header.component';
   selector: 'app-root',
   imports: [RouterOutlet, HeaderComponent],
   templateUrl: './app.component.html',
+  standalone: true
 })
-export class AppComponent {
-}
+export class AppComponent {}

@@ -3,7 +3,12 @@
         2Hush
     </a>
     <nav>
+        @if (authStore.user()) {
+        <p>{{ authStore.user().email }}</p>
+        <button (click)="logOut()">Logout</button>
+        } @else {
         <a href="/login">Login</a>
         <a href="/register">Register</a>
+        }
     </nav>
 </header>

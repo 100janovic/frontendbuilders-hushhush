@@ -20,7 +20,7 @@ app.use(urlencoded({ limit: '1mb', extended: true }));
 
 // Routes
 app.use('/api/auth', authRoutes);
-app.use('/api/', authMiddleware, secretsRoutes);
+app.use('/api/secrets', authMiddleware, secretsRoutes);
 
 // Start
 app.listen(port, () => {

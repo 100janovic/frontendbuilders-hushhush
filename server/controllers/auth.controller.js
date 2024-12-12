@@ -15,14 +15,16 @@ export const register = async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, 10);
     const newUser = {
         email,
-        password: hashedPassword
+        password: hashedPassword,
+        id: generateId(db.data.users)
     }
 
     db.data.users.push(newUser);
     db.write();
 
     const token = generateToken({
-        email
+        email,
+        id: newUser.id
     });
 
     res.status(200).json({
@@ -49,7 +51,8 @@ export const login = async (req, res) => {
     const isMatch = await bcrypt.compare(password, user.password);
     if (user && isMatch) {
         const token = generateToken({
-            email
+            email,
+            id: user.id
         });
         res.status(200).json({
             message: "Login success",
@@ -85,7 +88,8 @@ export const status = (req, res) => {
     res.status(200).json({
         message: "User is logged succefully",
         user: {
-            email: user.email
+            email: user.email,
+            id: user.id
         }
     });
 };
