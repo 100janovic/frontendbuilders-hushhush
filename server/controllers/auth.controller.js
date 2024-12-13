@@ -1,6 +1,7 @@
 import db from "../db/db.js";
 import bcrypt from "bcryptjs";
 import { generateToken, getTokenFromHeader, getVerifiedUsesFromToken } from "../utils/token.js";
+import { generateId } from "../utils/generate-id.js";
 
 
 export const register = async (req, res) => {

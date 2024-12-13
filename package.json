@@ -2,12 +2,10 @@
   "name": "hushhush",
   "version": "0.0.0",
   "scripts": {
-    "install": "cd frontend && npm install",
-    "install-server": "cd server && npm install",
     "start": "cd frontend && npm run start",
     "build": "cd frontend && npm run build",
     "server": "cd server && npm run start"
   },
   "private": true,
-  "dependencies": {}
+"dependencies": {}
 }
