@@ -23,31 +23,26 @@ export const AuthStore = signalStore({
 
     return {
       getStatus: rxMethod<void>((m$) => m$.pipe(
-        map(() => localStorage.getItem(environment.authKey)),
-        filter((token) => !!token),
-        switchMap((token) => http.post(`${environment.api}/api/auth/status`, {}).pipe(
+        switchMap((_) => http.post(`${environment.api}/auth/status`, {}).pipe(
           tap((results: any) => {
-            console.log(results);
             patchState(state, {
               user: results.user
             })
           }),
           catchError((err) => {
-            router.navigateByUrl('/login');
-            localStorage.removeItem(environment.authKey);
             return of(err);
           })
         ))
       )),
+
       login: rxMethod<Login>((payload$) => payload$.pipe(
         tap(() => patchState(state, { loading: true })),
-        switchMap((payload: Login) => http.post<LoginResults>(`${environment.api}/api/auth/login`, payload).pipe(
-          tap((result: LoginResults) => {
+        switchMap((payload: Login) => http.post<LoginResults>(`${environment.api}/auth/login`, payload).pipe(
+          tap((results: LoginResults) => {
             patchState(state, {
-              user: result.user,
+              user: results.user,
               loading: false
             });
-            localStorage.setItem(environment.authKey, result.token)
             router.navigateByUrl(payload.redirectURL ?? '/');
           }),
           catchError(err => {
@@ -56,13 +51,37 @@ export const AuthStore = signalStore({
           }),
         )),
       )),
-      logout: () => {
-        patchState(state, {
-          user: null
-        });
-        localStorage.removeItem(environment.authKey);
-        router.navigateByUrl('login');
-      }
+
+      register: rxMethod<Login>((payload$) => payload$.pipe(
+        tap(() => patchState(state, { loading: true })),
+        switchMap((payload: Login) => http.post<LoginResults>(`${environment.api}/auth/register`, payload).pipe(
+          tap((results: LoginResults) => {
+            patchState(state, {
+              user: results.user,
+              loading: false
+            });
+            router.navigateByUrl(payload.redirectURL ?? '/');
+          }),
+          catchError(err => {
+            patchState(state, { loading: false })
+            return of(err);
+          }),
+        )),
+      )),
+
+      logout: rxMethod<void>((m$) => m$.pipe(
+        switchMap((_) => http.post(`${environment.api}/auth/logout`, {}).pipe(
+          tap((_: any) => {
+            patchState(state, {
+              user: null
+            });
+            router.navigateByUrl('login');
+          }),
+          catchError((err) => {
+            return of(err);
+          })
+        ))
+      ))
     }
   }),
   withHooks({

@@ -4,9 +4,9 @@ import { ServerConfig } from "../config/server.config.js";
 export const generateToken = (payload) => {
     return jwt.sign(
         payload,
-        ServerConfig.token.secret,
+        ServerConfig.cookie.tokenSecret,
         {
-            expiresIn: ServerConfig.token.expiresIn
+            expiresIn: ServerConfig.cookie.expiresIn
         }
     )
 };
@@ -16,18 +16,10 @@ export const getVerifiedUsesFromToken = (token) => {
 
     jwt.verify(
         token,
-        ServerConfig.token.secret,
+        ServerConfig.cookie.tokenSecret,
         (err, payload) => {
             result = err ? false : payload;
         })
 
     return result;
-}
-
-export const getTokenFromHeader = (headers) => {
-    const authorization = headers.authorization;
-    if (!authorization) {
-        return null;
-    }
-    return authorization.split(' ')['1'];
 }

@@ -27,7 +27,7 @@ export const SecretsStore = signalStore({
                 map(() => authStore.user()?.id),
                 filter((userId) => !!userId),
                 tap(() => patchState(state, { loading: true })),
-                switchMap((userId) => http.get(`${environment.api}/api/secrets/${userId}`).pipe(
+                switchMap((userId) => http.get(`${environment.api}/secrets/${userId}`).pipe(
                     tap((results: any) => {
                         patchState(state, {
                             loading: false,

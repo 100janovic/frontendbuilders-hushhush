@@ -1,7 +1,9 @@
 import db from "../db/db.js";
 import bcrypt from "bcryptjs";
-import { generateToken, getTokenFromHeader, getVerifiedUsesFromToken } from "../utils/token.js";
+import { generateToken, getVerifiedUsesFromToken } from "../utils/token.js";
 import { generateId } from "../utils/generate-id.js";
+import { setCookie } from "../utils/set-cookie.js";
+import { ServerConfig } from "../config/server.config.js";
 
 
 export const register = async (req, res) => {
@@ -28,10 +30,14 @@ export const register = async (req, res) => {
         id: newUser.id
     });
 
-    res.status(200).json({
-        message: "Register successs!",
-        token
-    });
+    res
+        .status(200)
+        .setHeader("Set-Cookie", setCookie(token))
+        .setHeader("Access-Control-Allow-Credentials", "true")
+        .json({
+            message: "Register successs!",
+            user: newUser
+        });
 };
 
 
@@ -55,11 +61,14 @@ export const login = async (req, res) => {
             email,
             id: user.id
         });
-        res.status(200).json({
-            message: "Login success",
-            user: user,
-            token
-        })
+        res
+            .status(200)
+            .setHeader("Set-Cookie", setCookie(token))
+            .setHeader("Access-Control-Allow-Credentials", "true")
+            .json({
+                message: "Login success",
+                user: user
+            });
         return;
     }
 
@@ -68,7 +77,8 @@ export const login = async (req, res) => {
 
 
 export const status = (req, res) => {
-    const token = getTokenFromHeader(req.headers);
+    const token = req.cookies[ServerConfig.cookie.tokenKey];
+
     if (!token) {
         res.status(401).json({ message: "No authorization header" })
         return;
@@ -82,7 +92,10 @@ export const status = (req, res) => {
 
     const user = db.data.users.find((u) => u.email === userFromToken.email);
     if (!user) {
-        res.status(401).json({ message: "User not found" });
+        res
+            .clearCookie(ServerConfig.cookie.tokenKey)
+            .status(401)
+            .json({ message: "User not found" });
         return;
     }
 
@@ -96,4 +109,8 @@ export const status = (req, res) => {
 };
 
 
-export const logout = (req, res) => { };
+export const logout = (req, res) => {
+    return res.clearCookie(ServerConfig.cookie.tokenKey).json({
+        message: "User is logged out"
+    });
+};

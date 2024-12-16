@@ -6,15 +6,12 @@ export const AuthInterceptor = (
     next: HttpHandlerFn
 ) => {
 
-    const token = localStorage.getItem(environment.authKey);
     const isApiCall = request.url.includes(environment.api);
     const isExeption = request.url.includes('/register');
 
-    if (!!token && isApiCall && !isExeption) {
+    if (isApiCall && !isExeption) {
         request = request.clone({
-            setHeaders: {
-                Authorization: `Bearer ${token}`
-            }
+            withCredentials: true
         })
     }
 

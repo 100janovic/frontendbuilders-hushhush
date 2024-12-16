@@ -6,8 +6,9 @@ export const ServerConfig = {
         ],
         credentials: true
     },
-    token: {
-        secret: 'hushhush2024',
-        expiresIn: '24h'
+    cookie: {
+        expiresIn: 24 * 60 * 60 * 1000,
+        tokenSecret: 'hushhush2024',
+        tokenKey: 'accesstoken'
     }
 }

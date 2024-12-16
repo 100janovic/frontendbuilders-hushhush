@@ -5,6 +5,7 @@ import secretsRoutes from "./routes/secrets.routes.js";
 import authMiddleware from "./routes/auth.middleware.js";
 import { ServerConfig } from "./config/server.config.js";
 import { logger } from "./utils/logger.js";
+import cookieParser from "cookie-parser";
 
 // Config
 const port = process.env.PORT || ServerConfig.port;
@@ -16,6 +17,7 @@ const app = express();
 // Middlewares
 app.use(cors(ServerConfig.cors));
 app.use(json({ limit: '1mb' }));
+app.use(cookieParser());
 app.use(urlencoded({ limit: '1mb', extended: true }));
 
 // Routes

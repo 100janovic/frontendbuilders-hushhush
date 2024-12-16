@@ -24,7 +24,7 @@ export class LoginComponent {
     redirectURL: ""
   }
 
-  private store = inject(AuthStore);
+  public store = inject(AuthStore);
   public loading = this.store.loading;
 
   login(payload: Login) {

@@ -1,1 +1,24 @@
-<p>register works!</p>
+<div class="auth-component">
+    <div class="header">
+        <h1>Register</h1>
+    </div>
+    <div class="body">
+        <form #authForm="ngForm" (submit)="register(authForm?.value)">
+            <div>
+                <label for="email">Email</label>
+                <input id="email" name="email" type="text" placeholder="Email address" [(ngModel)]="payload.email">
+            </div>
+            <br />
+            <div>
+                <label for="password">Password</label>
+                <input id="password" name="password" type="password" placeholder="Password"
+                    [(ngModel)]="payload.password">
+            </div>
+            <br />
+            <br />
+            <button [disabled]="loading()" type="submit">Register
+            </button>
+            <div *ngIf="loading()">Saving data...</div>
+        </form>
+    </div>
+</div>
