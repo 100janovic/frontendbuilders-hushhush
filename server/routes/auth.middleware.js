@@ -10,6 +10,7 @@ const authMiddleware = (req, res, next) => {
 
     const user = getVerifiedUsesFromToken(token);
     if (user) {
+        req.user = user;
         return next();
     }
 

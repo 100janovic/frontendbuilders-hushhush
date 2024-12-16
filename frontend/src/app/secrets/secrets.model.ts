@@ -1,6 +1,7 @@
 export type Secret = {
-    id: number;
+    id?: number;
     slug: string;
-    userId: string;
+    userId?: string;
     value: string;
+    displayValue?: string;
 }

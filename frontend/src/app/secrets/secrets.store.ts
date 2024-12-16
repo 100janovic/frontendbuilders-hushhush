@@ -6,6 +6,7 @@ import { AuthStore } from "../auth/auth.store";
 import { HttpClient } from "@angular/common/http";
 import { environment } from "../../environments/environment.development";
 import { Secret } from "./secrets.model";
+import { Router } from "@angular/router";
 
 export const SecretsStore = signalStore({
     providedIn: 'root'
@@ -21,6 +22,7 @@ export const SecretsStore = signalStore({
 
         const authStore = inject(AuthStore);
         const http = inject(HttpClient);
+        const router = inject(Router);
 
         return {
             getSecrets: rxMethod<void>($p => $p.pipe(
@@ -31,8 +33,42 @@ export const SecretsStore = signalStore({
                     tap((results: any) => {
                         patchState(state, {
                             loading: false,
-                            secrets: results.secrets
+                            secrets: results.secrets.map((s: Secret) => ({
+                                ...s,
+                                displayValue: s.value.split('').map((v) => '*').join('')
+                            }))
                         });
+                    }),
+                    catchError(err => {
+                        patchState(state, { loading: false })
+                        return of(err);
+                    })
+                ))
+            )),
+            addSecret: rxMethod<Secret>($p => $p.pipe(
+                tap(() => patchState(state, { loading: true })),
+                switchMap((payload: Secret) =>
+                    http.post(`${environment.api}/secrets/${authStore.user()?.id}`, payload).pipe(
+                        tap((results: any) => {
+                            patchState(state, {
+                                loading: false,
+                                secrets: [...state.secrets(), results.secret]
+                            });
+                            router.navigateByUrl('/');
+                        }),
+                        catchError(err => {
+                            patchState(state, { loading: false })
+                            return of(err);
+                        })
+                    ))
+            )),
+            deleteSecret: rxMethod<number>($p => $p.pipe(
+                switchMap((id: number) => http.delete(`${environment.api}/secrets/${id}`).pipe(
+                    tap((results: any) => {
+                        patchState(state, {
+                            secrets: state.secrets().filter(s => s.id !== id)
+                        });
+                        router.navigateByUrl('/');
                     }),
                     catchError(err => {
                         patchState(state, { loading: false })
