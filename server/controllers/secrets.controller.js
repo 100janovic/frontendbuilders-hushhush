@@ -2,7 +2,7 @@ import db from "../db/db.js";
 import { generateId } from "../utils/generate-id.js";
 
 export const secrets = (req, res) => {
-    const userId = +req.params.userId;
+    const userId = req.user.id;
     const secrets = db.data.secrets.filter(s => s.userId === userId).reverse().map(s => ({
         ...s,
         value: s.value
@@ -17,7 +17,7 @@ export const secrets = (req, res) => {
 };
 
 export const getSecret = (req, res) => {
-    const userId = +req.params.userId;
+    const userId = req.user.id;
     const secretId = +req.params.secretId;
     const secret = db.data.secrets.find(s => s.userId === userId && s.id === secretId);
 

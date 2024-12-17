@@ -1,14 +1,14 @@
 <header class="app-header">
     <a href="/" class="logo">
-        2Hush
+        HushHush
     </a>
     <nav>
         @if (authStore.user()) {
-        <p>{{ authStore.user().email }}</p>
-        <button (click)="logOut()">Logout</button>
+            <p>{{ authStore.user().email }}</p>
+            <button (click)="logOut()">Logout</button>
         } @else {
-        <a href="/login">Login</a>
-        <a href="/register">Register</a>
+            <a href="/login">Login</a>
+            <a href="/register">Register</a>
         }
     </nav>
 </header>

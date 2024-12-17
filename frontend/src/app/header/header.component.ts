@@ -5,7 +5,6 @@ import { AuthStore } from '../auth/auth.store';
   selector: 'app-header',
   imports: [],
   templateUrl: './header.component.html',
-  styleUrl: './header.component.scss',
   standalone: true
 })
 export class HeaderComponent {

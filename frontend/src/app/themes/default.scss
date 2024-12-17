@@ -1,0 +1,155 @@
+$borderRadius: 4px;
+$textColor: #333;
+$backColor: #ccc;
+$fontSizeR: 14px;
+$fontSizeL: 20px;
+
+.logo {
+    background-color: $textColor;
+    color: white;
+    padding: 8px;
+    border-radius: $borderRadius;
+
+    &:hover {
+        text-decoration: none;
+    }
+}
+
+.app-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    nav {
+        display: flex;
+        flex-direction: row;
+
+        a {
+            margin-left: 0.5rem;
+            padding-right: 0.5rem;
+            border-right: 1px solid black;
+
+            &:last-child {
+                border-right: none;
+            }
+        }
+
+        p {
+            margin-right: 20px;
+        }
+    }
+}
+
+.list-header {
+    padding: 0 20px;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.secret {
+    display: flex;
+    margin: 0 0;
+    padding: 10px 10px;
+    justify-content: space-between;
+    border: 1px solid $backColor;
+    border-radius: $borderRadius;
+
+    &:last-child {
+        border-top: none;
+    }
+
+    .btn-delete {
+        color: red;
+    }
+
+    .btn-copy {
+        margin-left: 20px;
+    }
+
+    .controls {
+        display: flex;
+        justify-content: flex-end;
+    }
+}
+
+.form-component {
+    width: 300px;
+    height: auto;
+    margin: auto;
+    border: 1px solid $backColor;
+    padding: 20px;
+    border-radius: $borderRadius;
+}
+
+.loading {
+    width: 80px;
+    position: fixed;
+    bottom: 10px;
+    right: 10px;
+    background-color: $textColor;
+    z-index: 5;
+    padding: 10px;
+    color: $backColor;
+}
+
+p {
+    color: $textColor;
+    font-size: $fontSizeR;
+}
+
+button {
+    cursor: pointer;
+    background-color: transparent;
+    padding: 10px;
+    border: 1px solid $backColor;
+    outline: none;
+    border-radius: $borderRadius;
+    transition: border .2s;
+
+    &:hover {
+        border: 1px solid $textColor;
+    }
+
+    &.primary {
+        background-color: $textColor;
+        color: white;
+    }
+}
+
+a {
+    color: $textColor;
+    text-decoration: none;
+
+    &:hover {
+        text-decoration: underline;
+    }
+}
+
+form {
+    width: 100%;
+
+    label {
+        width: 100%;
+        display: block;
+
+    }
+
+    input,
+    textarea {
+        margin: 5px 0;
+        width: 100%;
+        display: block;
+        box-sizing: border-box;
+        padding: 10px;
+        border: 1px solid $backColor;
+        border-radius: $borderRadius;
+        background-color: transparent;
+        outline: none;
+
+        &:active,
+        &:focus {
+            border-color: $textColor;
+        }
+    }
+}

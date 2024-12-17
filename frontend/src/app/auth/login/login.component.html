@@ -1,5 +1,8 @@
-<div class="auth-component">
+<div class="form-component">
     <div class="header">
+        <a href="/" class="logo">
+            HushHush
+        </a>
         <h1>Login</h1>
     </div>
     <div class="body">
@@ -16,7 +19,7 @@
             </div>
             <br />
             <br />
-            <button [disabled]="loading()" type="submit">Login
+            <button [disabled]="loading()" type="submit" class="primary">Login
             </button>
             <div *ngIf="loading()">Checking data...</div>
         </form>

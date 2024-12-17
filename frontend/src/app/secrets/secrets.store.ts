@@ -1,8 +1,7 @@
 import { inject } from "@angular/core";
 import { patchState, signalStore, withMethods, withState } from "@ngrx/signals";
 import { rxMethod } from "@ngrx/signals/rxjs-interop";
-import { catchError, filter, map, of, switchMap, tap } from "rxjs";
-import { AuthStore } from "../auth/auth.store";
+import { catchError, of, switchMap, tap } from "rxjs";
 import { HttpClient } from "@angular/common/http";
 import { environment } from "../../environments/environment.development";
 import { Secret } from "./secrets.model";
@@ -14,25 +13,20 @@ export const SecretsStore = signalStore({
 },
     withState({
         secrets: [],
-        loading: false,
-        loadingSecret: false
+        loading: false
     } as {
         secrets: Secret[],
-        loading: boolean,
-        loadingSecret: boolean
+        loading: boolean
     }),
     withMethods((state) => {
 
-        const authStore = inject(AuthStore);
         const http = inject(HttpClient);
         const router = inject(Router);
 
         return {
             getSecrets: rxMethod<void>($p => $p.pipe(
-                map(() => authStore.user()?.id),
-                filter((userId) => !!userId),
                 tap(() => patchState(state, { loading: true })),
-                switchMap((userId) => http.get(`${environment.api}/secrets/${userId}`).pipe(
+                switchMap(() => http.get(`${environment.api}/secrets`).pipe(
                     tap((results: any) => {
                         patchState(state, {
                             loading: false,
@@ -46,20 +40,16 @@ export const SecretsStore = signalStore({
                 ))
             )),
             getSecretById: rxMethod<number>($p => $p.pipe(
-                map((id) => ({
-                    id,
-                    userId: authStore.user()?.id
-                })),
-                tap(() => patchState(state, { loadingSecret: true })),
-                switchMap(({ id, userId }) => http.get(`${environment.api}/secrets/${userId}/${id}`).pipe(
+                tap(() => patchState(state, { loading: true })),
+                switchMap((id) => http.get(`${environment.api}/secrets/${id}`).pipe(
                     tap((results: any) => {
                         patchState(state, {
-                            loadingSecret: false
+                            loading: false
                         });
                         copy(results.secret?.value);
                     }),
                     catchError(err => {
-                        patchState(state, { loadingSecret: false })
+                        patchState(state, { loading: false })
                         return of(err);
                     })
                 ))
@@ -67,7 +57,7 @@ export const SecretsStore = signalStore({
             addSecret: rxMethod<Secret>($p => $p.pipe(
                 tap(() => patchState(state, { loading: true })),
                 switchMap((payload: Secret) =>
-                    http.post(`${environment.api}/secrets/${authStore.user()?.id}`, payload).pipe(
+                    http.post(`${environment.api}/secrets`, payload).pipe(
                         tap((results: any) => {
                             patchState(state, {
                                 loading: false,

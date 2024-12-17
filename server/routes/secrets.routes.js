@@ -3,9 +3,9 @@ import { addSecret, deleteSecret, getSecret, secrets } from "../controllers/secr
 
 const router = Router();
 
-router.get('/:userId', secrets);
-router.get('/:userId/:secretId', getSecret);
-router.post('/:userId', addSecret);
+router.get('/', secrets);
+router.get('/:secretId', getSecret);
+router.post('/', addSecret);
 router.delete('/:id', deleteSecret);
 
 export default router;

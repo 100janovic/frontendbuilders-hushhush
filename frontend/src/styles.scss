@@ -1,17 +1,7 @@
-button {
-    cursor: pointer;
-}
+@import "./app/themes/default.scss";
 
-.secret {
-    display: flex;
-    margin: 0 0;
-    padding: 10px 20px;
-    justify-content: space-between;
-    border: 1px solid #ccc;
-    .btn-delete {
-        color: red;
-    }
-    .btn-copy {
-        margin-left: 20px;
-    }
+body {
+    font-family: "Roboto", sans-serif;
+    font-weight: 400;
+    font-style: normal;
 }
