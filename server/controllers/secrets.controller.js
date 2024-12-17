@@ -3,12 +3,28 @@ import { generateId } from "../utils/generate-id.js";
 
 export const secrets = (req, res) => {
     const userId = +req.params.userId;
-    const secrets = db.data.secrets.filter(s => s.userId === userId).reverse();
+    const secrets = db.data.secrets.filter(s => s.userId === userId).reverse().map(s => ({
+        ...s,
+        value: s.value
+            .split('')
+            .map((v, index) => index > s.value.length - 4 ? v : '*')
+            .join('')
+    }));
 
     res.status(200).json({
         secrets
     });
 };
+
+export const getSecret = (req, res) => {
+    const userId = +req.params.userId;
+    const secretId = +req.params.secretId;
+    const secret = db.data.secrets.find(s => s.userId === userId && s.id === secretId);
+
+    res.status(200).json({
+        secret
+    });
+}
 
 export const addSecret = (req, res) => {
     const { slug, value } = req.body;

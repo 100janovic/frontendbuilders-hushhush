@@ -7,16 +7,19 @@ import { HttpClient } from "@angular/common/http";
 import { environment } from "../../environments/environment.development";
 import { Secret } from "./secrets.model";
 import { Router } from "@angular/router";
+import copy from "copy-to-clipboard";
 
 export const SecretsStore = signalStore({
     providedIn: 'root'
 },
     withState({
         secrets: [],
-        loading: false
+        loading: false,
+        loadingSecret: false
     } as {
         secrets: Secret[],
-        loading: boolean
+        loading: boolean,
+        loadingSecret: boolean
     }),
     withMethods((state) => {
 
@@ -33,14 +36,30 @@ export const SecretsStore = signalStore({
                     tap((results: any) => {
                         patchState(state, {
                             loading: false,
-                            secrets: results.secrets.map((s: Secret) => ({
-                                ...s,
-                                displayValue: s.value.split('').map((v) => '*').join('')
-                            }))
+                            secrets: results.secrets
                         });
                     }),
                     catchError(err => {
                         patchState(state, { loading: false })
+                        return of(err);
+                    })
+                ))
+            )),
+            getSecretById: rxMethod<number>($p => $p.pipe(
+                map((id) => ({
+                    id,
+                    userId: authStore.user()?.id
+                })),
+                tap(() => patchState(state, { loadingSecret: true })),
+                switchMap(({ id, userId }) => http.get(`${environment.api}/secrets/${userId}/${id}`).pipe(
+                    tap((results: any) => {
+                        patchState(state, {
+                            loadingSecret: false
+                        });
+                        copy(results.secret?.value);
+                    }),
+                    catchError(err => {
+                        patchState(state, { loadingSecret: false })
                         return of(err);
                     })
                 ))

@@ -15,8 +15,8 @@ export class SecretsCListomponent implements OnInit {
         this.secretsStore.getSecrets();
     }
 
-    copySecret(value: string) {
-        copy(value);
+    fetchAndCopy(id: number | undefined) {
+        this.secretsStore.getSecretById(id as number);
     }
 
     deleteSecret(id?: number) {
