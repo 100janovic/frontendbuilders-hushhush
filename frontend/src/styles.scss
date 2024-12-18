@@ -5,3 +5,33 @@ body {
     font-weight: 400;
     font-style: normal;
 }
+
+main {
+    min-height: calc(100vh - 120px);
+}
+
+.toasts {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    z-index: 10;
+    text-align: right;
+    .toast {
+        width: auto;
+        display: inline-block;
+        padding: 20px;
+        background-color: #FFF;
+        border: 2px solid #444;
+        border-radius: 8px;
+        margin-bottom: 8px;
+    }
+    .toast.success {
+        background-color: #dffddb;
+    }
+    .toast.error {
+        background-color: #ffbab1;
+    }
+    .toast.info {
+        background-color: #fff;
+    }
+}

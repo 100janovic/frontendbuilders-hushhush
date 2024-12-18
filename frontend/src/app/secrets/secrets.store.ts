@@ -7,6 +7,7 @@ import { environment } from "../../environments/environment.development";
 import { Secret } from "./secrets.model";
 import { Router } from "@angular/router";
 import copy from "copy-to-clipboard";
+import { ToastsStore } from "../shared/toast.store";
 
 export const SecretsStore = signalStore({
     providedIn: 'root'
@@ -22,6 +23,7 @@ export const SecretsStore = signalStore({
 
         const http = inject(HttpClient);
         const router = inject(Router);
+        const toastStore = inject(ToastsStore);
 
         return {
             getSecrets: rxMethod<void>($p => $p.pipe(
@@ -34,7 +36,11 @@ export const SecretsStore = signalStore({
                         });
                     }),
                     catchError(err => {
-                        patchState(state, { loading: false })
+                        patchState(state, { loading: false });
+                        toastStore.add({
+                            message: err.message,
+                            type: 'error'
+                        });
                         return of(err);
                     })
                 ))
@@ -63,10 +69,18 @@ export const SecretsStore = signalStore({
                                 loading: false,
                                 secrets: [...state.secrets(), results.secret]
                             });
+                            toastStore.add({
+                                message: 'Secret is saved!',
+                                type: 'success'
+                            });
                             router.navigateByUrl('/');
                         }),
                         catchError(err => {
-                            patchState(state, { loading: false })
+                            patchState(state, { loading: false });
+                            toastStore.add({
+                                message: err.message,
+                                type: 'error'
+                            });
                             return of(err);
                         })
                     ))
@@ -77,10 +91,18 @@ export const SecretsStore = signalStore({
                         patchState(state, {
                             secrets: state.secrets().filter(s => s.id !== id)
                         });
+                        toastStore.add({
+                            message: 'Secret is deleted!',
+                            type: 'info'
+                        });
                         router.navigateByUrl('/');
                     }),
                     catchError(err => {
-                        patchState(state, { loading: false })
+                        patchState(state, { loading: false });
+                        toastStore.add({
+                            message: err.message,
+                            type: 'error'
+                        });
                         return of(err);
                     })
                 ))

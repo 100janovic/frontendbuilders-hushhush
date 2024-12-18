@@ -6,6 +6,7 @@ import { inject } from "@angular/core";
 import { Router } from "@angular/router";
 import { HttpClient } from "@angular/common/http";
 import { environment } from "../../environments/environment.development";
+import { ToastsStore } from "../shared/toast.store";
 
 export const AuthStore = signalStore({
   providedIn: 'root'
@@ -20,6 +21,7 @@ export const AuthStore = signalStore({
 
     const router = inject(Router);
     const http = inject(HttpClient);
+    const toastStore = inject(ToastsStore);
 
     return {
       getStatus: rxMethod<void>((m$) => m$.pipe(
@@ -46,7 +48,11 @@ export const AuthStore = signalStore({
             router.navigateByUrl(payload.redirectURL ?? '/');
           }),
           catchError(err => {
-            patchState(state, { loading: false })
+            patchState(state, { loading: false });
+            toastStore.add({
+              message: err.message,
+              type: 'error'
+            });
             return of(err);
           }),
         )),
@@ -63,7 +69,11 @@ export const AuthStore = signalStore({
             router.navigateByUrl(payload.redirectURL ?? '/');
           }),
           catchError(err => {
-            patchState(state, { loading: false })
+            patchState(state, { loading: false });
+            toastStore.add({
+              message: err.message,
+              type: 'error'
+            });
             return of(err);
           }),
         )),
@@ -75,9 +85,17 @@ export const AuthStore = signalStore({
             patchState(state, {
               user: null
             });
+            toastStore.add({
+              message: "Logout success",
+              type: 'info'
+            })
             router.navigateByUrl('login');
           }),
           catchError((err) => {
+            toastStore.add({
+              message: err.message,
+              type: 'error'
+            });
             return of(err);
           })
         ))

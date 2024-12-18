@@ -1,12 +1,15 @@
-$borderRadius: 4px;
+// VARIABLES
+$borderRadius: 6px;
 $textColor: #333;
 $backColor: #ccc;
 $fontSizeR: 14px;
 $fontSizeL: 20px;
+$white: #fff;
+$danger: #f50000e7;
 
 .logo {
     background-color: $textColor;
-    color: white;
+    color: $white;
     padding: 8px;
     border-radius: $borderRadius;
 
@@ -60,7 +63,7 @@ $fontSizeL: 20px;
     }
 
     .btn-delete {
-        color: red;
+        color: $danger;
     }
 
     .btn-copy {
@@ -70,6 +73,9 @@ $fontSizeL: 20px;
     .controls {
         display: flex;
         justify-content: flex-end;
+        button {
+            margin-left: 10px;
+        }
     }
 }
 
@@ -83,14 +89,16 @@ $fontSizeL: 20px;
 }
 
 .loading {
-    width: 80px;
+    width: 120px;
     position: fixed;
     bottom: 10px;
     right: 10px;
     background-color: $textColor;
+    border: 1px solid $textColor;
     z-index: 5;
-    padding: 10px;
-    color: $backColor;
+    padding: 20px;
+    color: $white;
+    border-radius: $borderRadius;
 }
 
 p {
@@ -102,18 +110,26 @@ button {
     cursor: pointer;
     background-color: transparent;
     padding: 10px;
-    border: 1px solid $backColor;
+    border: 2px solid $backColor;
     outline: none;
     border-radius: $borderRadius;
     transition: border .2s;
 
     &:hover {
-        border: 1px solid $textColor;
+        border: 2px solid $textColor;
     }
 
     &.primary {
         background-color: $textColor;
-        color: white;
+        color: $white;
+    }
+
+    &.danger {
+        color: $danger;
+    }
+
+    &.danger:hover {
+        border-color: $danger;
     }
 }
 
