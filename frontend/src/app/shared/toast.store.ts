@@ -1,6 +1,6 @@
 import { patchState, signalStore, withMethods, withState } from '@ngrx/signals';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
-import { delay, tap } from 'rxjs';
+import { delay, map, tap } from 'rxjs';
 
 export type ToastState = {
   messages: Toast[],
@@ -8,6 +8,7 @@ export type ToastState = {
 }
 
 export type Toast = {
+  id?: string;
   message: string;
   type: 'success' | 'error' | 'info'
 }
@@ -15,11 +16,15 @@ export type Toast = {
 export const ToastsStore = signalStore({ providedIn: 'root' },
   withState({
     messages: [],
-    delay: 5000
+    delay: 2000
   } as ToastState),
   withMethods((state) => {
     return {
       add: rxMethod<Toast>($p => $p.pipe(
+        map((message: Toast) => ({
+          ...message,
+          id: Math.random().toString()
+        })),
         tap((message: Toast) => patchState(state, {
           messages: [...state.messages(), message]
         })),
@@ -27,7 +32,7 @@ export const ToastsStore = signalStore({ providedIn: 'root' },
         tap((message) => {
           patchState(state, {
             messages: [...state.messages().filter((m: Toast) => {
-              return m.message !== message.message
+              return m.id !== message.id
             })]
           })
         })

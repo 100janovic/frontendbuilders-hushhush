@@ -53,6 +53,7 @@ export const SecretsStore = signalStore({
                             loading: false
                         });
                         copy(results.secret?.value);
+                        toastStore.add({ message: 'Secret copied!', type: 'success'})
                     }),
                     catchError(err => {
                         patchState(state, { loading: false })
